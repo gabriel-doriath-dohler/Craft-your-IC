@@ -4,6 +4,14 @@
 poetry run python src/__init__.py
 ```
 
+# Dev setup
+
+Install nix and direnv. Then:
+
+```console
+direnv allow
+```
+
 # TODO
 
 [ ] ASM simulator
