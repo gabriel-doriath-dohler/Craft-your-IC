@@ -1,3 +1,9 @@
+# Run the code
+
+```console
+poetry run python src/__init__.py
+```
+
 # TODO
 
 [ ] ASM simulator
