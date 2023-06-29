@@ -25,7 +25,7 @@ instruction:
 """
 
 truc_parser = Lark(r"""
-                    file: (w instruction? w "\n")*
+                    ?file: (w instruction? w "\n")*
 
                     ?instruction: "." WORD -> label
                            | "store" wp mem_address wp register -> store
@@ -46,7 +46,7 @@ truc_parser = Lark(r"""
                         | "jof"  -> jof
 
                     register: "%" NUMBER
-                    mem_address: "#" NUMBER
+                    mem_address: "@" NUMBER
                     immediate: "$" NUMBER
 
                     w: WS*
@@ -55,15 +55,15 @@ truc_parser = Lark(r"""
                     %import common.NUMBER
                     %import common.WS
 
-                    COMMENT: "--" /[^\n]/* 
+                    COMMENT: "#" /[^\n]/* 
                     %ignore COMMENT
 
                    """, start = "file")
 
 text = r"""
 .abcsd
-    -- thing
-    store #12 %5 --test
+    # thing
+    store @12 %5 #test
     add %0 %2 %3
     jmp abcsd
     or %0 %15 %0
@@ -72,7 +72,7 @@ text = r"""
 
 .issou
     mov %2 %5
-    jz issou -- Jump
+    jz issou # Jump
 
 """
 
