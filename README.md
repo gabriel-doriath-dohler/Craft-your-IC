@@ -19,3 +19,4 @@ direnv allow
 - [ ] ISA documentation
 - [ ] Example of programs
 - [ ] Schematic generator for the ROM @gdd
+- [ ] Apply License
