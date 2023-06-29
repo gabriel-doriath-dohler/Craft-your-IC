@@ -84,6 +84,34 @@ class SpaceTransformer(Transformer):
     def binop(self, tok: Token):
         return Tree(tok[0].data, children=tok[1:])
 
-parsed = SpaceTransformer().transform(truc_parser.parse(text))
-print(parsed)
-print(parsed.pretty())
+# Performs the label extraction and removal
+class LabelRecorder():
+    labels = {}
+    instructions = []
+    pc = 0
+    
+    def file(self, tree):
+        print(tree.__dict__.keys())
+        for tree in tree.children:
+            if self.instruction(tree):
+                self.pc += 1
+                self.instructions.append(tree)
+        return (self.instructions, self.labels)
+
+    def instruction(self, tree):
+        if tree.data == "label":
+            self.label(tree)
+            return False
+        return True 
+
+    def label(self, tree):
+        new_label = tree.children[0]
+        new_location = self.pc
+        print(f"{new_location}: {new_label}")
+        self.labels[new_label] = new_location
+
+parsed = truc_parser.parse(text)
+parsed_nospaces = SpaceTransformer().transform(parsed)
+#print(parsed_nospaces)
+#print(parsed_nospaces.pretty())
+print(LabelRecorder().file(parsed_nospaces))
