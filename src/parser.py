@@ -33,6 +33,7 @@ truc_parser = Lark(r"""
                            | "mov" wp register wp register -> mov
                            | "mov" wp register wp register -> mov
                            | jump wp WORD -> jump
+                           | "nop" -> nop
 
                     binop: "add" -> add
                         | "sub"  -> sub
@@ -64,8 +65,10 @@ text = r"""
     -- thing
     store #12 %5 --test
     add %0 %2 %3
+    jmp abcsd
     or %0 %0 %0
     sub %0 %0 %0
+    nop
 
 .issou
     mov %2 %5
