@@ -1,4 +1,4 @@
-from lark import Lark, Token, Transformer, Discard
+from lark import Lark, Token, Transformer, Discard, Tree
 
 """
 file:
@@ -27,7 +27,7 @@ instruction:
 truc_parser = Lark(r"""
                     file: (w instruction? w "\n")*
 
-                    instruction: "." WORD -> label
+                    ?instruction: "." WORD -> label
                            | "store" wp mem_address wp register -> store
                            | binop wp register wp register wp register -> binop
                            | "mov" wp register wp register -> mov
@@ -66,8 +66,8 @@ text = r"""
     store #12 %5 --test
     add %0 %2 %3
     jmp abcsd
-    or %0 %0 %0
-    sub %0 %0 %0
+    or %0 %15 %0
+    sub %0 %0 %5
     nop
 
 .issou
@@ -81,6 +81,8 @@ class SpaceTransformer(Transformer):
         return Discard
     def wp(self, tok: Token):
         return Discard
+    def binop(self, tok: Token):
+        return Tree(tok[0].data, children=tok[1:])
 
 parsed = SpaceTransformer().transform(truc_parser.parse(text))
 print(parsed)
