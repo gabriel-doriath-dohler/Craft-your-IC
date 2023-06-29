@@ -91,7 +91,6 @@ class LabelRecorder():
     pc = 0
     
     def file(self, tree):
-        print(tree.__dict__.keys())
         for tree in tree.children:
             if self.instruction(tree):
                 self.pc += 1
@@ -107,7 +106,7 @@ class LabelRecorder():
     def label(self, tree):
         new_label = tree.children[0]
         new_location = self.pc
-        print(f"{new_location}: {new_label}")
+        # print(f"{new_location}: {new_label}")
         self.labels[new_label] = new_location
 
 parsed = truc_parser.parse(text)
