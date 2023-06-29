@@ -29,10 +29,10 @@ truc_parser = Lark(r"""
 
                     instruction: "." WORD -> label
                            | w "store" wp mem_address wp register -> store
-                           | w "add" wp register wp register w register -> add
-                           | w "sub" wp register wp register w register -> sub
-                           | w "xor" wp register wp register w register -> xor
-                           | w "or" wp register wp register w register -> or
+                           | w "add" wp register wp register wp register -> add
+                           | w "sub" wp register wp register wp register -> sub
+                           | w "xor" wp register wp register wp register -> xor
+                           | w "or" wp register wp register wp register -> or
 
                     register: "%" NUMBER
                     mem_address: "#" NUMBER
