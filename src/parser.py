@@ -25,14 +25,24 @@ instruction:
 """
 
 truc_parser = Lark(r"""
-                    file: (w instruction w "\n")*
+                    file: (w instruction? w "\n")*
 
                     instruction: "." WORD -> label
-                           | w "store" wp mem_address wp register -> store
-                           | w "add" wp register wp register wp register -> add
-                           | w "sub" wp register wp register wp register -> sub
-                           | w "xor" wp register wp register wp register -> xor
-                           | w "or" wp register wp register wp register -> or
+                           | "store" wp mem_address wp register -> store
+                           | binop wp register wp register wp register -> binop
+                           | "mov" wp register wp register -> mov
+                           | "mov" wp register wp register -> mov
+                           | jump wp WORD -> jump
+
+                    binop: "add" -> add
+                        | "sub"  -> sub
+                        | "or"   -> or
+                        | "xor"  -> xor
+
+                    jump: "jmp"  -> jmp
+                        | "jz"   -> jz
+                        | "jneg" -> jneg
+                        | "jof"  -> jof
 
                     register: "%" NUMBER
                     mem_address: "#" NUMBER
@@ -56,7 +66,11 @@ text = r"""
     add %0 %2 %3
     or %0 %0 %0
     sub %0 %0 %0
+
 .issou
+    mov %2 %5
+    jz issou -- Jump
+
 """
 
 class SpaceTransformer(Transformer):
@@ -65,6 +79,6 @@ class SpaceTransformer(Transformer):
     def wp(self, tok: Token):
         return Discard
 
-parsed = SpaceTransformer().transform(tree=truc_parser.parse(text))
+parsed = SpaceTransformer().transform(truc_parser.parse(text))
 print(parsed)
 print(parsed.pretty())
