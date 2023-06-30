@@ -1,4 +1,10 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> {} }:
 pkgs.mkShell {
-  buildInputs = with pkgs; [ poetry ];
+  buildInputs = [
+    (pkgs.python3.withPackages (ps: [
+      (ps.callPackage ./nix/litemapy.nix {
+        nbtlib = ps.callPackage ./nix/nbtlib.nix { };
+      })
+    ]))
+  ];
 }
