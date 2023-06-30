@@ -25,7 +25,7 @@ instruction:
 """
 
 truc_parser = Lark(r"""
-                    ?file: (w instruction? w "\n")*
+                    ?file: (w instruction? w "\n")*(w instruction? w)?
 
                     ?instruction: "." WORD -> label
                            | "store" wp mem_address wp register -> store
@@ -74,8 +74,7 @@ text = r"""
 
 .issou
     mov %2 %5
-    jz issou # Jump
-"""
+    jz issou # Jump"""
 
 class SpaceTransformer(Transformer):
     def w(self, tok: Token):
