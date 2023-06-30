@@ -33,6 +33,7 @@ truc_parser = Lark(r"""
                            | "mov" wp register wp register -> mov
                            | "mov" wp register wp register -> mov
                            | jump wp WORD -> jump
+                           | "loadi" wp immediate wp register -> loadi
                            | "nop" -> nop
 
                     binop: "add" -> add
@@ -67,6 +68,7 @@ text = r"""
     add %0 %2 %3
     jmp abcsd
     or %0 %15 %0
+    loadi $1 %5
     sub %0 %0 %5
     nop
 
@@ -113,4 +115,6 @@ parsed = truc_parser.parse(text)
 parsed_nospaces = SpaceTransformer().transform(parsed)
 #print(parsed_nospaces)
 #print(parsed_nospaces.pretty())
-print(LabelRecorder().file(parsed_nospaces))
+tree, labels = LabelRecorder().file(parsed_nospaces)
+print(labels)
+print(Tree(data="file", children = tree).pretty())
