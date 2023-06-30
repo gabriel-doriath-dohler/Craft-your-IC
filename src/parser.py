@@ -67,7 +67,7 @@ text = r""".abcsd
     add %0 %2 %30
     jmp abcsd
     or %0 %15 %1
-    loadi $1 %5
+    loadi $1 %17
     sub %0 %0 %5
     nop
 
@@ -81,6 +81,13 @@ class SpaceTransformer(Transformer):
         return Discard
     def wp(self, tok: Token):
         return Discard
+    def loadi(self, tok: Token):
+        reg_id = int(tok[-1].children[0].value)
+        if reg_id in [0, 1, 15]:
+            print(f"Register is not writable: {tok[-1].children[0].value}, line {tok[-1].children[0].line}")
+        if (reg_id > 15) or (reg_id < 0):
+            print(f"Register id out-of-range: {reg_id}, line {tok[-1].children[0].line}")
+        return Tree(tok[0].data, children=tok[1:])
     def binop(self, tok: Token):
         for reg in tok[1:]:
             reg_id = int(reg.children[0].value)
