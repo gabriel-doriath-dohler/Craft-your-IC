@@ -65,7 +65,7 @@ text = r"""
 .abcsd
     # thing
     store @12 %5 #test
-    add %0 %2 %3
+    add %0 %2 %30
     jmp abcsd
     or %0 %15 %0
     loadi $1 %5
@@ -75,7 +75,6 @@ text = r"""
 .issou
     mov %2 %5
     jz issou # Jump
-
 """
 
 class SpaceTransformer(Transformer):
@@ -84,6 +83,12 @@ class SpaceTransformer(Transformer):
     def wp(self, tok: Token):
         return Discard
     def binop(self, tok: Token):
+        for reg in tok[1:]:
+            reg_id = int(reg.children[0].value)
+            if (reg_id > 15) or (reg_id < 0):
+                print(f"Register id out-of-range: {reg_id}")
+        if int(reg.children[0].value) in [0, 1, 15]:
+            print(f"Register is not writable: {reg.children[0].value}")
         return Tree(tok[0].data, children=tok[1:])
 
 # Performs the label extraction and removal
