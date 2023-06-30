@@ -61,20 +61,20 @@ truc_parser = Lark(r"""
 
                    """, start = "file")
 
-text = r"""
-.abcsd
+text = r""".abcsd
     # thing
     store @12 %5 #test
     add %0 %2 %30
     jmp abcsd
-    or %0 %15 %0
+    or %0 %15 %1
     loadi $1 %5
     sub %0 %0 %5
     nop
 
 .issou
     mov %2 %5
-    jz issou # Jump"""
+    jz issou # Jump
+"""
 
 class SpaceTransformer(Transformer):
     def w(self, tok: Token):
@@ -85,9 +85,9 @@ class SpaceTransformer(Transformer):
         for reg in tok[1:]:
             reg_id = int(reg.children[0].value)
             if (reg_id > 15) or (reg_id < 0):
-                print(f"Register id out-of-range: {reg_id}")
-        if int(reg.children[0].value) in [0, 1, 15]:
-            print(f"Register is not writable: {reg.children[0].value}")
+                print(f"Register id out-of-range: {reg_id}, line {reg.children[0].line}")
+        if int(tok[-1].children[0].value) in [0, 1, 15]:
+            print(f"Register is not writable: {tok[-1].children[0].value}, line {tok[-1].children[0].line}")
         return Tree(tok[0].data, children=tok[1:])
 
 # Performs the label extraction and removal
