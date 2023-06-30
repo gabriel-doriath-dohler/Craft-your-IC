@@ -1,4 +1,9 @@
 /result
 /dist
 .direnv
+<<<<<<< HEAD
 /.mypy_cache
+=======
+*.litematic
+.pre-commit-config.yaml
+>>>>>>> 2c3cc37 (chore: nix flake git pre-commit hooks integration)

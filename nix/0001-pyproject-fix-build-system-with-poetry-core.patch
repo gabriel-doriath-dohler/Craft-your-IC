@@ -1,0 +1,24 @@
+From b6bc5029f84600eead1eea09520104c067ae8086 Mon Sep 17 00:00:00 2001
+From: Raito Bezarius <masterancpp@gmail.com>
+Date: Fri, 30 Jun 2023 12:32:16 +0200
+Subject: [PATCH] pyproject: fix build system with poetry-core
+
+---
+ pyproject.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index bc4c71e..c4d0228 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -41,5 +41,5 @@ version_toml = "pyproject.toml:tool.poetry.version"
+ build_command = "poetry build"
+ 
+ [build-system]
+-requires = ["poetry>=0.12"]
+-build-backend = "poetry.masonry.api"
++requires = ["poetry-core"]
++build-backend = "poetry.core.masonry.api"
+-- 
+2.40.1
+
