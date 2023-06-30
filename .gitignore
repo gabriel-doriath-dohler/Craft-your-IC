@@ -1,3 +1,5 @@
 /result
 /dist
 .direnv
+*.litematic
+.pre-commit-config.yaml
