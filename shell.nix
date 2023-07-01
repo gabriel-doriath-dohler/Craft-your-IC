@@ -1,4 +1,4 @@
 { pkgs ? import <nixpkgs> { } }:
 pkgs.mkShell {
-  buildInputs = with pkgs; [ poetry ];
+  buildInputs = with pkgs; [ poetry black mypy ];
 }
