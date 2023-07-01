@@ -24,7 +24,8 @@ instruction:
 ;
 """
 
-truc_parser = Lark(r"""
+truc_parser = Lark(
+    r"""
                     ?file: (w instruction? w "\n")*(w instruction? w)?
 
                     ?instruction: "." WORD -> label
@@ -59,7 +60,9 @@ truc_parser = Lark(r"""
                     COMMENT: "#" /[^\n]/* 
                     %ignore COMMENT
 
-                   """, start = "file")
+                   """,
+    start="file",
+)
 
 text = r""".abcsd
     # thing
@@ -76,33 +79,46 @@ text = r""".abcsd
     jz issou # Jump
 """
 
+
 class SpaceTransformer(Transformer):
     def w(self, tok: Token):
         return Discard
+
     def wp(self, tok: Token):
         return Discard
+
     def loadi(self, tok: Token):
         reg_id = int(tok[-1].children[0].value)
         if reg_id in [0, 1, 15]:
-            print(f"Register is not writable: {tok[-1].children[0].value}, line {tok[-1].children[0].line}")
+            print(
+                f"Register is not writable: {tok[-1].children[0].value}, line {tok[-1].children[0].line}"
+            )
         if (reg_id > 15) or (reg_id < 0):
-            print(f"Register id out-of-range: {reg_id}, line {tok[-1].children[0].line}")
+            print(
+                f"Register id out-of-range: {reg_id}, line {tok[-1].children[0].line}"
+            )
         return Tree(tok[0].data, children=tok[1:])
+
     def binop(self, tok: Token):
         for reg in tok[1:]:
             reg_id = int(reg.children[0].value)
             if (reg_id > 15) or (reg_id < 0):
-                print(f"Register id out-of-range: {reg_id}, line {reg.children[0].line}")
+                print(
+                    f"Register id out-of-range: {reg_id}, line {reg.children[0].line}"
+                )
         if int(tok[-1].children[0].value) in [0, 1, 15]:
-            print(f"Register is not writable: {tok[-1].children[0].value}, line {tok[-1].children[0].line}")
+            print(
+                f"Register is not writable: {tok[-1].children[0].value}, line {tok[-1].children[0].line}"
+            )
         return Tree(tok[0].data, children=tok[1:])
 
+
 # Performs the label extraction and removal
-class LabelRecorder():
+class LabelRecorder:
     labels = {}
     instructions = []
     pc = 0
-    
+
     def file(self, tree):
         for tree in tree.children:
             if self.instruction(tree):
@@ -114,7 +130,7 @@ class LabelRecorder():
         if tree.data == "label":
             self.label(tree)
             return False
-        return True 
+        return True
 
     def label(self, tree):
         new_label = tree.children[0]
@@ -122,10 +138,11 @@ class LabelRecorder():
         # print(f"{new_location}: {new_label}")
         self.labels[new_label] = new_location
 
+
 parsed = truc_parser.parse(text)
 parsed_nospaces = SpaceTransformer().transform(parsed)
-#print(parsed_nospaces)
-#print(parsed_nospaces.pretty())
+# print(parsed_nospaces)
+# print(parsed_nospaces.pretty())
 tree, labels = LabelRecorder().file(parsed_nospaces)
 print(labels)
-print(Tree(data="file", children = tree).pretty())
+print(Tree(data="file", children=tree).pretty())
